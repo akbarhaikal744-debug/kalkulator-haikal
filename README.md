@@ -1,2 +1,321 @@
-# kalkulator-haikal
-kalkuator simple
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kalkulator Haikal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(-45deg, #0f172a, #020617, #1e293b, #020617);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .calculator {
+      width: 100%;
+      max-width: 390px;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(18px);
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow: 0 0 40px rgba(0,255,255,0.15),
+                  0 20px 60px rgba(0,0,0,0.8);
+      color: #e5e7eb;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #22d3ee, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .title span {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    .display {
+      background: rgba(2,6,23,0.9);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: right;
+      margin-bottom: 14px;
+      border: 1px solid #1f2937;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+    }
+
+    .exp {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      min-height: 20px;
+      word-wrap: break-word;
+    }
+
+    .res {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f9fafb;
+      word-wrap: break-word;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 0;
+      font-size: 1rem;
+      background: #020617;
+      color: #e5e7eb;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      transition: 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .operator {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #38bdf8;
+    }
+
+    .equal {
+      grid-column: span 2;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #020617;
+      font-weight: 700;
+      box-shadow: 0 0 15px rgba(34,197,94,0.7);
+    }
+
+    .clear {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      color: white;
+    }
+
+    .secondary {
+      background: #111827;
+      color: #a5b4fc;
+    }
+
+    .history {
+      margin-top: 14px;
+      background: rgba(2,6,23,0.7);
+      border-radius: 14px;
+      padding: 10px;
+      border: 1px solid #1f2937;
+      font-size: 0.75rem;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+
+    .history ul {
+      padding: 0;
+      list-style: none;
+      margin: 0;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .history li {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed #1f2937;
+      padding: 3px 0;
+    }
+
+    .history li:last-child {
+      border-bottom: none;
+    }
+
+    .footer {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 0.7rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator">
+  <div class="title">
+    <h1>Kalkulator Haikal</h1>
+    <span>Modern Calculator Web</span>
+  </div>
+
+  <div class="display">
+    <div id="exp" class="exp"></div>
+    <div id="res" class="res">0</div>
+  </div>
+
+  <div class="buttons">
+    <button class="clear" data-act="clear">AC</button>
+    <button class="secondary" data-act="del">DEL</button>
+    <button class="secondary" data-act="percent">%</button>
+    <button class="operator" data-val="/">÷</button>
+
+    <button class="secondary" data-act="sign">+/-</button>
+    <button class="secondary" data-act="sqrt">√</button>
+    <button class="secondary" data-val="(">(</button>
+    <button class="secondary" data-val=")">)</button>
+
+    <button data-val="7">7</button>
+    <button data-val="8">8</button>
+    <button data-val="9">9</button>
+    <button class="operator" data-val="*">×</button>
+
+    <button data-val="4">4</button>
+    <button data-val="5">5</button>
+    <button data-val="6">6</button>
+    <button class="operator" data-val="-">−</button>
+
+    <button data-val="1">1</button>
+    <button data-val="2">2</button>
+    <button data-val="3">3</button>
+    <button class="operator" data-val="+">+</button>
+
+    <button data-val="0">0</button>
+    <button data-val=".">.</button>
+    <button class="equal" data-act="calc">=</button>
+  </div>
+
+  <div class="history">
+    <div class="history-header">
+      <span>Riwayat</span>
+      <button class="secondary" id="clearHistory">Clear</button>
+    </div>
+    <ul id="history"></ul>
+  </div>
+
+  <div class="footer">© 2025 Kalkulator Haikal</div>
+</div>
+
+<script>
+  const expEl = document.getElementById("exp");
+  const resEl = document.getElementById("res");
+  const historyEl = document.getElementById("history");
+  const clearHistoryBtn = document.getElementById("clearHistory");
+  let exp = "";
+  let history = [];
+
+  function update() { expEl.textContent = exp; }
+
+  function lastNumber() {
+    const ops = ["+","-","*","/"];
+    let idx = -1;
+    for (let i=0;i<exp.length;i++) if (ops.includes(exp[i])) idx=i;
+    return {start: idx+1, num: exp.slice(idx+1)};
+  }
+
+  function percent() {
+    const {start,num} = lastNumber();
+    if (!num) return;
+    exp = exp.slice(0,start) + (parseFloat(num)/100);
+    update();
+  }
+
+  function toggleSign() {
+    const {start,num} = lastNumber();
+    if (!num) return;
+    exp = exp.slice(0,start) + (-parseFloat(num));
+    update();
+  }
+
+  function sqrtCalc() {
+    const {start,num} = lastNumber();
+    const n = parseFloat(num);
+    if (n < 0) return;
+    exp = exp.slice(0,start) + Math.sqrt(n);
+    update();
+  }
+
+  function addHistory(e,r) {
+    history.unshift({e,r});
+    if (history.length>5) history.pop();
+    renderHistory();
+  }
+
+  function renderHistory() {
+    historyEl.innerHTML="";
+    history.forEach(h=>{
+      const li=document.createElement("li");
+      li.innerHTML=`<span>${h.e}</span><strong>${h.r}</strong>`;
+      historyEl.appendChild(li);
+    });
+  }
+
+  function calculate() {
+    try {
+      const result = eval(exp);
+      addHistory(exp,result);
+      resEl.textContent=result;
+      exp=""+result;
+      update();
+    } catch {
+      resEl.textContent="Error";
+    }
+  }
+
+  document.querySelectorAll("button").forEach(btn=>{
+    btn.onclick=()=>{
+      const val=btn.dataset.val;
+      const act=btn.dataset.act;
+      if(val) exp+=val;
+      if(act==="clear"){exp="";resEl.textContent="0";}
+      if(act==="del") exp=exp.slice(0,-1);
+      if(act==="calc") calculate();
+      if(act==="percent") percent();
+      if(act==="sign") toggleSign();
+      if(act==="sqrt") sqrtCalc();
+      update();
+    }
+  });
+
+  clearHistoryBtn.onclick=()=>{history=[];renderHistory();};
+</script>
+
+</body>
+</html>
